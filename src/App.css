@@ -1,0 +1,67 @@
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex; /* Gunakan flexbox */
+  flex-direction: column; /* Susun dalam kolom */
+  min-height: 100vh; /* Mengisi tinggi penuh tampilan */
+}
+
+.header {
+  background-color: #1f2bae;
+  color: white;
+  padding: 10px 0;
+}
+
+.btn {
+  background-color: #007bff;
+  color: white; /* Warna teks */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: whitesmoke; /* Warna saat hover */
+}
+
+.card-container {
+  display: flex; /* Gunakan flexbox */
+  justify-content: center; /* Pusatkan secara horizontal */
+  align-items: center; /* Pusatkan secara vertikal */
+  padding: 80px; /* Ruang di sekitar kontainer */
+  margin: auto; /* Pusatkan kontainer */
+  max-width: 500px; /* Lebar maksimum untuk responsivitas */
+  width: 90%; /* Lebar responsif */
+}
+
+ .card {
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  padding: 90px 300px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: -190px;
+  background-color: white;
+  max-width: 400px; /* Menetapkan lebar maksimum untuk responsivitas yang lebih baik */
+  width: 90%; /* Membuatnya responsif */ 
+ }  
+
+.card h1 {
+  margin-bottom: 20px; /* Spasi bawah untuk judul */
+}
+
+.card button {
+  width: 100%; /* Tombol penuh lebar */
+}
+
+.start-container {
+  margin-top: -190px;
+  padding: 200px 100px;
+  text-align: center;
+}

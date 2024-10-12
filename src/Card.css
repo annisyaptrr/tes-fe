@@ -1,0 +1,80 @@
+/* .card {
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  padding: 90px 300px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: -190px;
+  background-color: white;
+  max-width: 400px; /* Menetapkan lebar maksimum untuk responsivitas yang lebih baik */
+  /* width: 90%; * Membuatnya responsif */ */
+/* }  */
+
+.card-title  {
+  font-size: 3.2em;
+  margin-bottom: 10px;
+}
+
+.card-description {
+  font-size: 1.6em;
+  margin-bottom: 16px;
+}
+
+.card-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.question {
+  margin: 15px 0;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+}
+
+input[type="radio"] {
+  margin-right: 15px;
+}
+
+.button-group {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between; /* Menyebar tombol ke kiri dan kanan */
+  align-items: center; /* Pusatkan tombol secara vertikal */
+}
+
+.button-group button {
+  margin: 0 20px; /* Tambahkan jarak horizontal antara tombol */
+}
+
+
+.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px; /* Ukuran font konsisten */
+}
+
+.btn-ui {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-ui:hover {
+  background-color: #0056b3; /* Warna saat hover */
+}
+
+.btn-ui:disabled {
+  background-color: #ccc;
+  cursor: not-allowed; /* Menunjukkan bahwa tombol tidak aktif */
+}
+
+.btn-next {
+  margin-right: 15px; /* Tambahkan spasi antara tombol */
+}
+
