@@ -97,7 +97,7 @@ function App() {
 
   const fetchApi = async () => {
     try {
-      const res = await axios.get('https://frontend-test.rahmannauliaaa.workers.dev/questions');
+      const res = await axios.get('http://88.222.242.97:5001/');
       dispatch({ type: "successFetching", payload: res.data.data });
     } catch (err) {
       console.error(err);
