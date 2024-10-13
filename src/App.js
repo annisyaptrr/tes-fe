@@ -97,7 +97,11 @@ function App() {
 
   const fetchApi = async () => {
     try {
-      const res = await axios.get('http://88.222.242.97:5001/');
+      const res = await axios.get('https://0c5d-2a02-4780-12-e948-00-1.ngrok-free.app/', {
+        headers: {
+          'ngrok-skip-browser-warning' : 'true'
+        }
+      });
       dispatch({ type: "successFetching", payload: res.data.data });
     } catch (err) {
       console.error(err);
