@@ -57,7 +57,7 @@ function reducer(state, action) {
         ...state,
         answer: action.payload,
         points: isCorrect ? state.points + 1 : state.points,
-        feedback: isCorrect ? 'Jawaban Anda benar!' : `Jawaban yang benar adalah: ${question.correctAnswer}`,
+        feedback: isCorrect ? 'Jawaban Anda benar!' : `Jawaban yang seharusnya adalah: ${question.correctAnswer}`,
         showNextButton: true,
       };
     case "nextQuestion":
@@ -129,7 +129,7 @@ function App() {
       <div className="w-full h-full">
         {state.status === 'loading' && (
           <div className="loading-container flex flex-col items-center justify-center h-full">
-            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full"></div>
+            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
             <p className="text-gray-700 text-lg mt-4">Memuat data, harap tunggu...</p>
           </div>
         )}
@@ -139,7 +139,7 @@ function App() {
             <h1 className="text-4xl font-bold text-gray-800 mb-4">Siap Memulai Kuis?</h1>
             <p className="text-lg text-gray-600">Tekan tombol di bawah untuk memulai!</p>
             <button
-              className="btn-ui bg-red-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-red-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="btn-ui bg-blue-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl"
               onClick={() => dispatch({ type: "start" })}
             >
               Mari Mulai
