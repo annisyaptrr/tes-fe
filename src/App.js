@@ -8,12 +8,14 @@ const initialState = {
   data: [],
   status: "loading",
   index: 0,
-  answer: undefined,
+  answer: null,
   points: 0,
   highscore: 0,
+  feedback: null,
+  showNextButton: false,
+  error: null,
+  timRemaining: 60
 };
-
-const TimePerQuestions = 5;
 
 function reducer(state, action) {
   switch (action.type) {
@@ -27,12 +29,27 @@ function reducer(state, action) {
       return {
         ...state,
         status: "error",
+        error: action.payload,
       };
     case "start":
       return {
         ...state,
         status: "active",
+        timeRemaining: 60
       };
+    case "tick":
+      return {
+        ...state,
+        // status: "active"
+        timeRemaining: state.timeRemaining > 0 ? state.timeRemaining - 1 : 0,
+      }
+    case "timer":
+      const finish = "finished"
+      return {
+        ...state,
+        status: finish,
+        highscore: Math.max(state.points, state.highscore),
+      }
     case "newAnswer":
       const question = state.data[state.index];
       const isCorrect = action.payload === question.correctAnswer;
@@ -40,18 +57,23 @@ function reducer(state, action) {
         ...state,
         answer: action.payload,
         points: isCorrect ? state.points + 1 : state.points,
+        feedback: isCorrect ? 'Jawaban Anda benar!' : `Jawaban yang benar adalah: ${question.correctAnswer}`,
+        showNextButton: true,
       };
-    case "nextQuestions":
+    case "nextQuestion":
       return {
         ...state,
         index: Math.min(state.index + 1, state.data.length - 1),
         answer: null,
+        feedback: null,
+        showNextButton: false,
+        timeRemaining: 60
       };
     case "previousQuestion":
       return {
         ...state,
         index: Math.max(state.index - 1, 0),
-        answer: null,
+        feedback: null,
       };
     case "finish":
       return {
@@ -79,54 +101,82 @@ function App() {
       dispatch({ type: "successFetching", payload: res.data.data });
     } catch (err) {
       console.error(err);
-      dispatch({ type: "failedFetching" });
+      dispatch({ type: "failedFetching", payload: 'Gagal memuat data. Silakan coba lagi.' });
     }
   };
 
-  const percentage = (state.points / Math.max(state.data.length, 1)) * 100;
-  const emoji = percentage === 100 ? "🥇" :
-                 percentage >= 80 ? "🎉" :
-                 percentage >= 50 ? "🙃" :
-                 percentage > 0 ? "🤨" : "🤦‍♂️";
+  useEffect(() => {
+    let timerInterval;
+
+    if (state.status === 'active' && state.timeRemaining > 0) {
+      timerInterval = setInterval(() => {
+        dispatch({ type: "tick" });
+      }, 1000);
+    }
+
+    if (state.timeRemaining === 0) {
+      dispatch({ type: "timer" });
+    }
+
+    return () => clearInterval(timerInterval); // Clean up timer on unmount
+  }, [state.status, state.timeRemaining]);
+
+  console.log(state)
 
   return (
-    <div className="App">
-  <Navbar />
-  <section className="card-container">
-    {state.status === 'ready' && (
-      <div className="card start-container">
-        <h1>Start Here</h1>
-        <button className="btn btn-ui" onClick={() => dispatch({ type: "start" })}>
-          Let's Start
-        </button>
-      </div>
-    )}
-    {state.status === 'active' && (
-      <Card
-        state={state}
-        dispatch={dispatch}
-      />
-    )}
-    {state.status === 'finished' && (
-      <div className="card">
-        <p>Finished</p>
-        <div className="result_container">
-          <p className="result">
-            <span>{emoji}</span> You scored <strong>{state.points}</strong> out of {state.data.length} ({Math.ceil(percentage)}%)
-          </p>
-          <p className="highscore">(Highscore: {state.highscore} points)</p>
-          <button
-            className="btn btn-ui"
-            onClick={() => dispatch({ type: "restart" })}
-          >
-            Restart quiz
-          </button>
-        </div>
-      </div>
-    )}
-  </section>
-</div>
+    <div className="w-full h-[100vh]">
+      <Navbar state={state} />
+      <div className="w-full h-full">
+        {state.status === 'loading' && (
+          <div className="loading-container flex flex-col items-center justify-center h-full">
+            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full"></div>
+            <p className="text-gray-700 text-lg mt-4">Memuat data, harap tunggu...</p>
+          </div>
+        )}
+        {state.status === 'error' && <p style={{ color: 'red' }}>{state.error}</p>}
+        {state.status === 'ready' && (
+          <div className="start-container h-full flex items-center justify-center flex-col gap-6">
+            <h1 className="text-4xl font-bold text-gray-800 mb-4">Siap Memulai Kuis?</h1>
+            <p className="text-lg text-gray-600">Tekan tombol di bawah untuk memulai!</p>
+            <button
+              className="btn-ui bg-red-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-red-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+              onClick={() => dispatch({ type: "start" })}
+            >
+              Mari Mulai
+            </button>
+          </div>
+        )}
 
+        {state.status === 'active' && (
+          <Card state={state} dispatch={dispatch} />
+        )}
+        {state.status === 'finished' && (
+          <div className="w-full h-full flex items-center justify-center bg-gray-100">
+            <div className="result-card w-full max-w-[400px] p-6 bg-white rounded-lg shadow-lg text-center">
+              <h2 className="text-2xl font-bold text-green-600 mb-4">Kuis Selesai!</h2>
+
+              <div className="result-container">
+                <p className="result text-lg text-gray-800 mb-2">
+                  Anda mendapatkan <strong className="text-xl text-green-600">{state.points}</strong> dari <strong className="text-xl">{state.data.length}</strong> poin.
+                </p>
+
+                <p className="highscore text-gray-600 text-md mb-4">
+                  (Skor tertinggi: <strong className="text-lg text-blue-500">{state.highscore}</strong> poin)
+                </p>
+              </div>
+
+              <button
+                className="restart-btn w-full py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-all duration-300"
+                onClick={() => dispatch({ type: "restart" })}
+              >
+                Restart Kuis
+              </button>
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
   );
 }
 

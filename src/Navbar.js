@@ -1,7 +1,7 @@
 import React, { useState, }from 'react';
 import './Navbar.css';
 
-function Navbar() {
+function Navbar({state}) {
   const [time, setTime] = useState(new Date());
  
 //   useEffect(()=> {
@@ -17,13 +17,20 @@ function Navbar() {
 //   };
 
   return (
-    <nav className="navbar">
+    <nav className="flex items-center w-full h-auto justify-between w-full p-[15px] shadow-md bg-white">
       <div className="navbar-brand">
         <h1>Basic Test</h1>
       </div>
-      {/* <div className="navbar-time">
-        {formatTime(time)}
-        </div> */}
+        <div className='flex items-center gap-[10px]'>
+        <div>
+          {state.timeRemaining}
+        </div>
+        <div>
+          {state.index}
+          /
+          {state.data.length}
+        </div>
+        </div>
       </nav>
   );
 }
